@@ -149,7 +149,7 @@ const Main = ({ activeAccount, setActiveAccount }) => {
   
         if (response.ok) {
           const data = await response.json();
-          console.log("Campaigns Data:", data.data);
+          // console.log("Campaigns Data:", data.data);
   
           if (data.data && data.data.length > 0) {
             // Filter campaigns based on the selected objective
@@ -419,7 +419,7 @@ const Main = ({ activeAccount, setActiveAccount }) => {
     setTaskId(taskId);
     formData.append("task_id", taskId);
 
-    console.log("activeAccount:", activeAccount);
+    // console.log("activeAccount:", activeAccount);
 
     if (!activeAccount || !activeAccount.ad_account_id) {
       toast.error("Ad account details are missing.");
@@ -437,10 +437,10 @@ const Main = ({ activeAccount, setActiveAccount }) => {
       formData.append(key, value);
     });
 
-    console.log("Final formData entries before submission:");
-    for (const pair of formData.entries()) {
-      console.log(`${pair[0]}: ${pair[1]}`);
-    }
+    // console.log("Final formData entries before submission:");
+    // for (const pair of formData.entries()) {
+    //   console.log(`${pair[0]}: ${pair[1]}`);
+    // }
 
     const controller = new AbortController();
     setUploadController(controller);

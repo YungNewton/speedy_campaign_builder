@@ -1123,6 +1123,10 @@ padding-top: 24px;
     font-size: 1rem;
 }
 
+.contact-send-msg:hover{
+    cursor:pointer;
+}
+
 footer {
     padding: 80px 120px;
     background-color: #1e1e1e;

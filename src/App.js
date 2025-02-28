@@ -23,6 +23,7 @@ import CookiesPolicy from './components/Policies/CookiesPolicy.js';
 import Affiliate from './components/Affiliate/Affiliate.js';
 import CookiesSettings from './components/CookieModal/CookiesSettings';
 import config from './config';
+import TawkTo from './components/LiveChat/TawkTo';
 
 const apiUrl = config.apiUrl;
 
@@ -165,6 +166,7 @@ const AppContent = () => {
           </>
         )}
       </Routes>
+      <TawkTo />
     </div>
   );
 };

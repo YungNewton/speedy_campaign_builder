@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom'; // Combine imports
 import ScopedGlobalStyle from './LandingStyles';
 import axios from 'axios';
@@ -63,6 +63,53 @@ const Landing = () => {
     }
   };
 
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    company: "",
+    message: "",
+  });
+  
+  const [loading, setLoading] = useState(false);
+  
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
+    // Simple validation
+    if (!formData.fullName || !formData.email || !formData.message) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+  
+    setLoading(true);
+  
+    try {
+      // Send structured JSON instead of a single string in "body"
+      await axios.post(`${apiUrl}/auth/send-support-email`, {
+        name: formData.fullName,
+        email: formData.email,
+        company: formData.company || "N/A",
+        message: formData.message,
+      },
+      { withCredentials: true }
+      );
+  
+      toast.success("We've received your message!");
+  
+      // Clear form
+      setFormData({ fullName: "", email: "", company: "", message: "" });
+    } catch (error) {
+      console.error("Email sending error:", error);
+      toast.error("Failed to send message. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };  
+  
   // Scroll to section if the state contains a target
   useEffect(() => {
     if (location.state?.section) {
@@ -126,7 +173,7 @@ const Landing = () => {
           </p>
           <div className="hero-video">
             <video
-              src="./assets/video1.mp4"
+              src="https://quickcampaignvideos.s3.us-east-1.amazonaws.com/hero-video.mp4"
               playsInline
               poster="./assets/poster2.jpg"
               controls
@@ -153,7 +200,7 @@ const Landing = () => {
             <div className="old-new-way-video">
               <video
                 className="old-way-video"
-                src="./assets/video2.mp4"
+                src="https://quick-campaigns.s3.eu-west-2.amazonaws.com/video2.mp4"
                 autoPlay
                 loop
                 muted
@@ -177,7 +224,7 @@ const Landing = () => {
             <div className="old-new-way-video">
               <video
                 className="new-way-video"
-                src="./assets/video3.mp4"
+                src="https://quick-campaigns.s3.eu-west-2.amazonaws.com/video3.mp4"
                 autoPlay
                 loop
                 muted
@@ -263,7 +310,7 @@ const Landing = () => {
           <div className="how-work-right">
             <div className="how-works-video">
               <video
-                src="./assets/video4.mp4"
+                src="https://quickcampaignvideos.s3.us-east-1.amazonaws.com/how-to-video.mp4"
                 playsInline
                 controls
                 poster="./assets/poster1.jpg"
@@ -489,12 +536,14 @@ const Landing = () => {
             experience the power of lightning-fast campaign creation. Say goodbye
             to wasted time and hello to increased productivity and performance.
           </p>
-          <button className="get-start-btn" onClick={() => navigate('/register')}>
+          <a className="no-dec" href="#pricing-section">
+          <button className="get-start-btn">
             Buy Now
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M18 8L22 12M22 12L18 16M22 12H2" stroke="#EEEEEE" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
+          </a>
         </div>
         <div className="get-start-wrapper get-start-wrapper-last">
           <p className="get-start-heading">30-Day Money-Back Guarantee</p>
@@ -632,29 +681,36 @@ const Landing = () => {
       
       <div id="contact-section" className="contact-us-section">
         <p className="contact-us-heading">Contact Us</p>
-        <form className="contact-form" action="#">
+        <form className="contact-form" onSubmit={handleSubmit}>
           <p className="send-msg-heading">Send us a message</p>
+
           <div>
             <label>Full name</label>
             <br />
-            <input type="text" placeholder="Enter your full name" />
+            <input type="text" name="fullName" placeholder="Enter your full name" value={formData.fullName} onChange={handleChange} />
           </div>
+
           <div>
             <label>Email address</label>
             <br />
-            <input type="email" placeholder="Enter your email" />
+            <input type="email" name="email" placeholder="Enter your email" value={formData.email} onChange={handleChange} />
           </div>
+
           <div>
             <label>Company</label>
             <br />
-            <input type="text" placeholder="Enter your Company Name" />
+            <input type="text" name="company" placeholder="Enter your Company Name" value={formData.company} onChange={handleChange} />
           </div>
+
           <div>
             <label>Write your message</label>
             <br />
-            <textarea rows="3" placeholder="Write Your Question Here..."></textarea>
+            <textarea name="message" rows="3" placeholder="Write Your Question Here..." value={formData.message} onChange={handleChange}></textarea>
           </div>
-          <button className="contact-send-msg">Send Message</button>
+
+          <button className="contact-send-msg" type="submit" disabled={loading}>
+            {loading ? "Sending..." : "Send Message"}
+          </button>
         </form>
       </div>
 

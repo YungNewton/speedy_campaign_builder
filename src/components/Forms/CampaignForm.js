@@ -188,6 +188,15 @@ const CampaignForm = ({
 
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files);
+    const MAX_SIZE = 10 * 1024 * 1024 * 1024; // 10GB in bytes
+  
+    // Option: Sum the total file size
+    const totalSize = files.reduce((acc, file) => acc + file.size, 0);
+    if (totalSize > MAX_SIZE) {
+      toast.error("The total file upload size exceeds 10GB. Please select smaller files.");
+      return;
+    }
+
     setUploadedFiles(files);
   };
 
@@ -208,7 +217,7 @@ const CampaignForm = ({
 
       <div className={styles.tutorialVideo}>
         <video
-          src="./assets/video4.mp4"
+          src="https://quickcampaignvideos.s3.us-east-1.amazonaws.com/how-to-video.mp4"
           playsInline
           controls
           poster="./assets/poster1.jpg"
